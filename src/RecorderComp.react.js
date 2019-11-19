@@ -3,44 +3,26 @@ import RecordRTC from "recordrtc";
 import { Modal } from 'react-bootstrap';
 import axios from "axios";
 
-function captureUserMedia(videoEabled, audioEnabled, callback) {
-  const videoSettings = videoEabled ? {
-    mandatory: {
-      //minAspectRatio: 1.77,
-      minWidth: 720,
-      minHeight: 480,
-
-      maxWidth: 1280,
-      maxHeight: 720,
-    }
-  } : videoEabled;
-  const params = {  
-    video: videoSettings, 
-    audio: audioEnabled 
-  };
-  navigator.getUserMedia(params, callback, error => {
-    alert(JSON.stringify(error));
-  });
-}
-
-const Checkbox = props => (
+export const Checkbox = props => (
   <input type="checkbox" {...props} />
-)
+);
 
 class RecorderCompReact extends React.Component {
 
   constructor(properties) {
     super(properties);
-
     this.state = {
       recordVideo: null,
+      blob: null,
       src: null,
       uploadSuccess: null,
       uploading: false,
       video: true,
       audio: true,
-      width: 100,
-      height: 480
+      maxWidth: process.env.REACT_APP_CAPTURE_MAX_WIDTH,
+      maxHeight: process.env.REACT_APP_CAPTURE_MAX_HEIGHT,
+      minWidth: process.env.REACT_APP_CAPTURE_MIN_WIDTH,
+      minHeight: process.env.REACT_APP_CAPTURE_MIN_HEIGHT,
     };
 
     this.requestUserMedia = this.requestUserMedia.bind(this);
@@ -50,31 +32,33 @@ class RecorderCompReact extends React.Component {
   }
 
   componentDidMount() {
+    console.log(process.env);
     document.getElementById('stop-record-btn').disabled = true;
     document.getElementById('upload-btn').disabled = true;
-    this.requestUserMedia();
+    this.requestUserMedia(stream => {
+      this.setState({src: stream});
+      const video = document.getElementById('video-viewer');
+      video.srcObject = stream;
+    });
   }
 
   startRecord() {
-    captureUserMedia(this.state.video, this.state.audio, stream => {
+    this.requestUserMedia(stream => {
       console.log('Recording is strarted');
       document.getElementById('vid-en').disabled = true;
       document.getElementById('aud-en').disabled = true;
       document.getElementById('start-record-btn').disabled = true;
       document.getElementById('stop-record-btn').disabled = false;
       document.getElementById('upload-btn').disabled = true;
-      document.getElementById('video-viewer').srcObject = stream;
+      const video = document.getElementById('video-viewer');
+      video.srcObject = stream;
+      video.controls = false;
+      video.muted = true;
 
-      this.setState({ uploadSuccess: false })
-      this.setState({ recordVideo: RecordRTC(stream, {
-        type: 'video',
-        canvas: {
-          width: this.state.width,
-          height: this.state.height
-        }})
-      });
+      this.setState({ uploadSuccess: false });
+      this.setState({ recordVideo: RecordRTC(stream)});
       this.state.recordVideo.startRecording()
-    });
+    })
   }
 
   stopRecord() {
@@ -88,19 +72,17 @@ class RecorderCompReact extends React.Component {
       const video = document.getElementById('video-viewer');
       video.src = video.srcObject = null;
       video.src = URL.createObjectURL(this.state.recordVideo.getBlob());
+      video.controls = true;
     })
   }
 
   uploadToS3(){
-    const url = 'http://localhost:4000/api/v1/video'
+    const url = process.env.REACT_APP_ENDPOINT;
     const blob = this.state.recordVideo.getBlob();
     const formData = new FormData();
-    console.log(blob)
     formData.append('file', blob);
 
     this.setState({uploading: true, uploadSuccess: false});
-
-    console.log(formData);
 
     axios.post(url, formData, {}).then(res => {
       this.setState({uploading: false, uploadSuccess: true});
@@ -108,19 +90,29 @@ class RecorderCompReact extends React.Component {
     })
   }
 
-  requestUserMedia(){
-    captureUserMedia(this.state.video, this.state.audio, stream => {
-      this.setState({src: stream});
-      const video = document.getElementById('video-viewer');
-      video.srcObject = stream;
-    })
-  }
+  requestUserMedia(callback){
+    const videoSettings = this.state.video ? {
+        mandatory: {
+          minWidth: this.state.minWidth,
+          minHeight: this.state.minHeight,
 
+          maxWidth: this.state.maxWidth,
+          maxHeight: this.state.maxHeight,
+        }
+      } : false;
+    const params = {
+      video: videoSettings,
+      audio: this.state.audio
+    };
+    navigator.getUserMedia(params, callback, error => {
+      alert(JSON.stringify(error));
+    });
+  }
 
   render() {
     return(
       <div>
-        <div><video id={'video-viewer'} autoPlay muted playsInline/></div>
+        <div><video id={'video-viewer'} autoPlay playsInline muted width={768} height={432}/></div>
         <div>
           <Checkbox 
             id="vid-en"
