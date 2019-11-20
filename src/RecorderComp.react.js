@@ -77,7 +77,7 @@ class RecorderCompReact extends React.Component {
   }
 
   uploadToS3(){
-    const url = process.env.REACT_APP_ENDPOINT;
+    const url = `${process.env.REACT_APP_ENDPOINT}/api/v1/video`;
     const blob = this.state.recordVideo.getBlob();
     const formData = new FormData();
     formData.append('file', blob);
@@ -134,7 +134,7 @@ class RecorderCompReact extends React.Component {
         <div><button id={'upload-btn'} onClick={this.uploadToS3}>Upload to S3</button></div>
         {this.state.uploading ?
           <div>Uploading...</div> : null}
-        <Modal show={this.state.uploadSuccess}><Modal.Body>Upload success!</Modal.Body></Modal>
+        <Modal show={this.state.uploadSuccess}><Modal.Body>Successfully uploaded!</Modal.Body></Modal>
       </div>
     )
   }
