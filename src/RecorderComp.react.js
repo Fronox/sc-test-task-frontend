@@ -43,6 +43,10 @@ class RecorderCompReact extends React.Component {
   }
 
   startRecord() {
+    if (!this.state.video && !this.state.audio) {
+      alert("You have to set up at least one source (video or/and audio)");
+      return;
+    }
     this.requestUserMedia(stream => {
       console.log('Recording is strarted');
       document.getElementById('vid-en').disabled = true;
