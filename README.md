@@ -1,5 +1,19 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Environment settings
+Before running the application, you need to define values in the .env file.
+The necessary variables represented in .env.example file:
+
+    REACT_APP_ENDPOINT=server endpoint for video uploading 
+        to AWS S3 (http://localhost:4000 for example)
+    REACT_APP_CAPTURE_MIN_WIDTH=minimal possible width in pixels 
+        for video capture (768 for example)
+    REACT_APP_CAPTURE_MIN_HEIGHT=minimal possible height in pixels
+        for video capture (432 for example)
+    REACT_APP_CAPTURE_MAX_WIDTH=maximal possible width in pixels 
+        for video capture (1280 for example)
+    REACT_APP_CAPTURE_MAX_HEIGHT=maximal possible width in pixels 
+        for video capture (720 for example)
 ## Available Scripts
 
 In the project directory, you can run:

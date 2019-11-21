@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="55c2d1e8-987d-42b6-beb6-c415005c74e9" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.env.example" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RecorderComp.react.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/RecorderComp.react.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -77,7 +77,9 @@
       <workItem from="1573819990256" duration="448000" />
       <workItem from="1574184146859" duration="10830000" />
       <workItem from="1574247807650" duration="1433000" />
-      <workItem from="1574266292246" duration="1650000" />
+      <workItem from="1574266292246" duration="2440000" />
+      <workItem from="1574334978804" duration="618000" />
+      <workItem from="1574338595316" duration="1282000" />
     </task>
     <servers />
   </component>
